@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolveInputs, type Stat } from "../src/stat";
+import { resolveInputs, MissingInputError, type Stat } from "../src/stat";
 
 const Revenue: Stat = {
   key: "revenue",
@@ -40,5 +40,9 @@ describe("resolveInputs", () => {
 
   it("omits an absent optional input", () => {
     expect(Object.keys(resolveInputs(Signups, {}))).toEqual([]);
+  });
+
+  it("throws MissingInputError when a required input is absent", () => {
+    expect(() => resolveInputs(Revenue, {})).toThrow(MissingInputError);
   });
 });

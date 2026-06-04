@@ -19,6 +19,13 @@ export interface Stat<
   inputs: Inputs;
 }
 
+export class MissingInputError extends Error {
+  constructor(key: string) {
+    super(`required input "${key}" is missing`);
+    this.name = "MissingInputError";
+  }
+}
+
 export function resolveInputs(
   stat: Stat,
   raw: Record<string, unknown>,
@@ -26,7 +33,10 @@ export function resolveInputs(
   const resolved: Record<string, unknown> = {};
   for (const input of Object.values(stat.inputs)) {
     const value = raw[input.key];
-    if (value === undefined) continue;
+    if (value === undefined) {
+      if (input.required) throw new MissingInputError(input.key);
+      continue;
+    }
     resolved[input.key] = value;
   }
   return resolved;
