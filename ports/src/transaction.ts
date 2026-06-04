@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from "node:async_hooks";
+
 export interface Transaction {
   readonly raw: unknown;
 }
@@ -8,11 +10,14 @@ export interface TransactionManager {
 }
 
 export class InMemoryTransactionManager implements TransactionManager {
+  private readonly context = new AsyncLocalStorage<Transaction>();
+
   async run<T>(work: (tx: Transaction) => Promise<T>): Promise<T> {
-    return work({ raw: {} });
+    const tx: Transaction = { raw: {} };
+    return this.context.run(tx, () => work(tx));
   }
 
   current(): Transaction | null {
-    return null;
+    return this.context.getStore() ?? null;
   }
 }
