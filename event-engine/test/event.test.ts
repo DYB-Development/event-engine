@@ -24,4 +24,9 @@ describe("defineEvent", () => {
     const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
     expect(event.level).toBe(Level.Outbox);
   });
+
+  it("carries occurredAt into the built event", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.occurredAt).toBe("2026-01-01T00:00:00Z");
+  });
 });
