@@ -29,6 +29,7 @@ export function latest(
     key,
     kind: "semi_additive",
     compute(events) {
+      if (events.length === 0) return 0;
       const newest = events.reduce((a, b) =>
         a.occurredAt >= b.occurredAt ? a : b,
       );

@@ -23,4 +23,9 @@ describe("latest", () => {
     const balance = latest("balance", (event) => event.payload as number);
     expect(balance.compute(events)).toBe(250);
   });
+
+  it("returns 0 when there are no events", () => {
+    const balance = latest("balance", (event) => event.payload as number);
+    expect(balance.compute([])).toBe(0);
+  });
 });
