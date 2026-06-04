@@ -20,3 +20,19 @@ export function additive(
     },
   };
 }
+
+export function latest(
+  key: string,
+  valueOf: (event: StoredEvent) => number,
+): Measure {
+  return {
+    key,
+    kind: "semi_additive",
+    compute(events) {
+      const newest = events.reduce((a, b) =>
+        a.occurredAt >= b.occurredAt ? a : b,
+      );
+      return valueOf(newest);
+    },
+  };
+}
