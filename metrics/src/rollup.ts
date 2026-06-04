@@ -11,7 +11,15 @@ export function rollup(
   bucketOf: (event: StoredEvent) => string,
   measure: Measure,
 ): RollupEntry[] {
-  const first = events[0];
-  if (!first) return [];
-  return [{ bucket: bucketOf(first), value: measure.compute(events) }];
+  const groups = new Map<string, StoredEvent[]>();
+  for (const event of events) {
+    const bucket = bucketOf(event);
+    const group = groups.get(bucket) ?? [];
+    group.push(event);
+    groups.set(bucket, group);
+  }
+  return [...groups].map(([bucket, group]) => ({
+    bucket,
+    value: measure.compute(group),
+  }));
 }
