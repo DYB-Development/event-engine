@@ -23,7 +23,7 @@ export function defineEvent<Name extends string, Schema extends ZodType>(
       return {
         name: spec.name,
         level: spec.level,
-        payload: spec.schema.parse(input) as z.output<Schema>,
+        payload: Object.freeze(spec.schema.parse(input)) as Readonly<z.output<Schema>>,
         occurredAt,
       };
     },
