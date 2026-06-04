@@ -6,11 +6,20 @@ export interface StoredEvent {
   payload: unknown;
 }
 
+export type Projection = (event: StoredEvent) => void | Promise<void>;
+
 export class EventStore {
+  private readonly projections: Projection[] = [];
+
   constructor(private readonly log: AppendOnlyStore<StoredEvent>) {}
+
+  subscribe(projection: Projection): void {
+    this.projections.push(projection);
+  }
 
   async append(event: StoredEvent): Promise<void> {
     await this.log.append(event);
+    for (const projection of this.projections) projection(event);
   }
 
   async all(): Promise<StoredEvent[]> {

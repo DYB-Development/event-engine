@@ -21,4 +21,16 @@ describe("EventStore", () => {
     }
     expect(await store.all()).toHaveLength(250);
   });
+
+  it("delivers an appended event to a subscribed projection", async () => {
+    const log = new InMemoryAppendOnlyStore<StoredEvent>();
+    const store = new EventStore(log);
+    const seen: StoredEvent[] = [];
+    store.subscribe((event) => {
+      seen.push(event);
+    });
+    const event: StoredEvent = { name: "a", occurredAt: "t", payload: 1 };
+    await store.append(event);
+    expect(seen).toEqual([event]);
+  });
 });
