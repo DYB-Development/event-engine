@@ -58,4 +58,20 @@ describe("defineEvent", () => {
     });
     expect(withNumber.fingerprint).not.toBe(withString.fingerprint);
   });
+
+  it("changes the fingerprint when the version changes", () => {
+    const v1 = defineEvent({
+      name: "thing.happened",
+      version: 1,
+      level: Level.InProcess,
+      schema: z.object({ value: z.number() }),
+    });
+    const v2 = defineEvent({
+      name: "thing.happened",
+      version: 2,
+      level: Level.InProcess,
+      schema: z.object({ value: z.number() }),
+    });
+    expect(v1.fingerprint).not.toBe(v2.fingerprint);
+  });
 });

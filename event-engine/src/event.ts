@@ -22,7 +22,7 @@ export function defineEvent<Name extends string, Schema extends ZodType>(
 ) {
   const shape = JSON.stringify(zodToJsonSchema(spec.schema));
   const fingerprint = createHash("sha256")
-    .update(`${spec.name}:${shape}`)
+    .update(`${spec.name}:${spec.version}:${shape}`)
     .digest("hex");
 
   return {
