@@ -14,4 +14,9 @@ describe("defineEvent", () => {
     const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
     expect(event.name).toBe("invoice.paid");
   });
+
+  it("carries the validated payload into the built event", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.payload).toEqual({ amountCents: 100 });
+  });
 });
