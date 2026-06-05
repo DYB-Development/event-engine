@@ -38,4 +38,13 @@ describe("canView", () => {
       }),
     ).toBe(true);
   });
+
+  it("lets an explicitly shared member view an in-account dashboard", () => {
+    expect(
+      canView(shared("in_account", ["invited"]), {
+        userId: "invited",
+        accountId: "acct",
+      }),
+    ).toBe(true);
+  });
 });

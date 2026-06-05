@@ -24,5 +24,11 @@ export function canView(shared: SharedDashboard, viewer: Principal): boolean {
   if (shared.visibility === "account_wide") {
     return viewer.accountId === shared.owner.accountId;
   }
+  if (shared.visibility === "in_account") {
+    return (
+      viewer.accountId === shared.owner.accountId &&
+      (shared.sharedWith?.includes(viewer.userId) ?? false)
+    );
+  }
   return false;
 }
