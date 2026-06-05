@@ -29,4 +29,13 @@ describe("canView", () => {
       canView(shared("account_wide"), { userId: "other", accountId: "acct" }),
     ).toBe(true);
   });
+
+  it("lets anyone view an external dashboard", () => {
+    expect(
+      canView(shared("external"), {
+        userId: "stranger",
+        accountId: "other-acct",
+      }),
+    ).toBe(true);
+  });
 });

@@ -20,6 +20,7 @@ export interface SharedDashboard {
 
 export function canView(shared: SharedDashboard, viewer: Principal): boolean {
   if (viewer.userId === shared.owner.userId) return true;
+  if (shared.visibility === "external") return true;
   if (shared.visibility === "account_wide") {
     return viewer.accountId === shared.owner.accountId;
   }
