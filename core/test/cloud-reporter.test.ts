@@ -23,4 +23,13 @@ describe("CloudReporter", () => {
     reporter.track("emitted", { name: "b", occurredAt: "t" });
     expect(sent).toHaveLength(1);
   });
+
+  it("does not call the client when there is nothing to flush", async () => {
+    let calls = 0;
+    const reporter = new CloudReporter(() => {
+      calls++;
+    });
+    await reporter.flush();
+    expect(calls).toBe(0);
+  });
 });

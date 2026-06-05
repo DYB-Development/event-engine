@@ -22,6 +22,7 @@ export class CloudReporter {
   }
 
   async flush(): Promise<void> {
+    if (this.buffer.length === 0) return;
     const batch = this.buffer;
     this.buffer = [];
     await this.client(batch);
