@@ -15,6 +15,8 @@ export class Delivery {
         for (const subscriber of this.deps.subscribersFor(event.name)) {
           await subscriber(event);
         }
+      } else if (event.level === Level.Outbox || event.level === Level.Broker) {
+        await this.deps.outbox.emit(event);
       }
     };
   }

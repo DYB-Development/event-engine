@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Level, type Subscriber } from "@event-engine/core";
 import { Delivery } from "../src/delivery";
+import type { OutboxEvent } from "../src/outbox";
 
 const noOutbox = { emit: async () => undefined };
 
@@ -21,5 +22,24 @@ describe("Delivery", () => {
       occurredAt: "t",
     });
     expect(ran).toEqual(["user.signup"]);
+  });
+
+  it("sends outbox-level events to the outbox", async () => {
+    const emitted: OutboxEvent[] = [];
+    const delivery = new Delivery({
+      subscribersFor: () => [],
+      outbox: {
+        emit: async (event) => {
+          emitted.push(event);
+        },
+      },
+    });
+    await delivery.handler()({
+      name: "invoice.paid",
+      level: Level.Outbox,
+      payload: 1,
+      occurredAt: "t",
+    });
+    expect(emitted.map((event) => event.name)).toEqual(["invoice.paid"]);
   });
 });
