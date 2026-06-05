@@ -30,3 +30,16 @@ export function setFilter(
     params,
   }));
 }
+
+export function reorderPlacements(
+  dashboard: Dashboard,
+  order: string[],
+): Dashboard {
+  const byKey = new Map(
+    dashboard.placements.map((placement) => [placement.statKey, placement]),
+  );
+  const placements = order
+    .map((statKey) => byKey.get(statKey))
+    .filter((placement): placement is Placement => placement !== undefined);
+  return { ...dashboard, placements };
+}

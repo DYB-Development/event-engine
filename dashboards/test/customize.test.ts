@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { hidePlacement, setFilter } from "../src/customize";
+import {
+  hidePlacement,
+  setFilter,
+  reorderPlacements,
+} from "../src/customize";
 import type { Dashboard } from "../src/dashboard";
 
 function makeDashboard(): Dashboard {
@@ -48,5 +52,15 @@ describe("setFilter", () => {
       next.placements.find((placement) => placement.statKey === "revenue")
         ?.params,
     ).toEqual({ region: "us" });
+  });
+});
+
+describe("reorderPlacements", () => {
+  it("orders placements by the given key order", () => {
+    const next = reorderPlacements(makeDashboard(), ["signups", "revenue"]);
+    expect(next.placements.map((placement) => placement.statKey)).toEqual([
+      "signups",
+      "revenue",
+    ]);
   });
 });
