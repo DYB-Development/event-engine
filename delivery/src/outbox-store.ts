@@ -27,6 +27,14 @@ export class OutboxStore {
     return record;
   }
 
+  list(): OutboxRecord[] {
+    return [...this.records.values()];
+  }
+
+  pending(): OutboxRecord[] {
+    return this.list().filter((record) => record.status === "pending");
+  }
+
   markPublished(id: string): void {
     const record = this.records.get(id);
     if (!record) return;

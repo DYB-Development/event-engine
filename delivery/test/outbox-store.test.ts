@@ -36,4 +36,19 @@ describe("OutboxStore", () => {
     store.markDeadLettered(record.id, "boom");
     expect(store.counts()).toMatchObject({ pending: 0, deadLettered: 1 });
   });
+
+  it("lists all records", () => {
+    const store = new OutboxStore();
+    store.record(event);
+    store.record(event);
+    expect(store.list()).toHaveLength(2);
+  });
+
+  it("lists only pending records via pending()", () => {
+    const store = new OutboxStore();
+    const first = store.record(event);
+    store.record(event);
+    store.markPublished(first.id);
+    expect(store.pending().map((record) => record.status)).toEqual(["pending"]);
+  });
 });
