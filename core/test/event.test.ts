@@ -30,6 +30,41 @@ describe("defineEvent", () => {
     expect(event.occurredAt).toBe("2026-01-01T00:00:00Z");
   });
 
+  it("carries the event version into the built event", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.version).toBe(1);
+  });
+
+  it("defaults the event type to the event name", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.type).toBe("invoice.paid");
+  });
+
+  it("defaults metadata to an empty object", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.metadata).toEqual({});
+  });
+
+  it("generates an idempotency key by default", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
+    expect(event.idempotencyKey.length).toBeGreaterThan(0);
+  });
+
+  it("carries provided idempotency key and aggregate fields from options", () => {
+    const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z", {
+      idempotencyKey: "idem-1",
+      aggregateType: "Invoice",
+      aggregateId: "inv-9",
+      aggregateVersion: 3,
+    });
+    expect(event).toMatchObject({
+      idempotencyKey: "idem-1",
+      aggregateType: "Invoice",
+      aggregateId: "inv-9",
+      aggregateVersion: 3,
+    });
+  });
+
   it("freezes the built event payload", () => {
     const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
     expect(Object.isFrozen(event.payload)).toBe(true);
