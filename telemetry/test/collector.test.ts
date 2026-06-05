@@ -23,4 +23,12 @@ describe("Collector", () => {
     await collector.collect(signal);
     expect(batches).toEqual([]);
   });
+
+  it("writes a batch when the batch size is reached", async () => {
+    const { batches, sink } = recordingSink();
+    const collector = new Collector(sink, 2);
+    await collector.collect(signal);
+    await collector.collect(signal);
+    expect(batches).toEqual([[signal, signal]]);
+  });
 });
