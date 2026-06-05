@@ -51,6 +51,9 @@ export function defineEvent<Name extends string, Schema extends ZodType>(
         occurredAt,
         metadata: options.metadata ?? {},
         idempotencyKey: options.idempotencyKey ?? randomUUID(),
+        aggregateType: options.aggregateType,
+        aggregateId: options.aggregateId,
+        aggregateVersion: options.aggregateVersion,
       };
     },
   };
