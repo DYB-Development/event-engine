@@ -11,10 +11,14 @@ export type ReportClient = (batch: ReportEntry[]) => void | Promise<void>;
 export class CloudReporter {
   private buffer: ReportEntry[] = [];
 
-  constructor(private readonly client: ReportClient) {}
+  constructor(
+    private readonly client: ReportClient,
+    private readonly batchSize = 50,
+  ) {}
 
   track(status: ReportStatus, event: { name: string; occurredAt: string }): void {
     this.buffer.push({ name: event.name, occurredAt: event.occurredAt, status });
+    if (this.buffer.length >= this.batchSize) void this.flush();
   }
 
   async flush(): Promise<void> {

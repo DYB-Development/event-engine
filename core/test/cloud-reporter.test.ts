@@ -13,4 +13,14 @@ describe("CloudReporter", () => {
       [{ name: "invoice.paid", occurredAt: "t", status: "emitted" }],
     ]);
   });
+
+  it("auto-flushes at the batch size", () => {
+    const sent: ReportEntry[][] = [];
+    const reporter = new CloudReporter((batch) => {
+      sent.push(batch);
+    }, 2);
+    reporter.track("emitted", { name: "a", occurredAt: "t" });
+    reporter.track("emitted", { name: "b", occurredAt: "t" });
+    expect(sent).toHaveLength(1);
+  });
 });
