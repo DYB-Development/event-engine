@@ -1,4 +1,4 @@
-import { Collector, type Signal } from "./collector";
+import type { Collector, Signal } from "./collector";
 
 export interface CollectResult {
   accepted: number;
