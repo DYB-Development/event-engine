@@ -15,4 +15,10 @@ export class OutboxDashboard {
   deadLetters(): OutboxRecord[] {
     return this.store.deadLetters();
   }
+
+  retryAll(): void {
+    for (const record of this.store.deadLetters()) {
+      this.store.retry(record.id);
+    }
+  }
 }

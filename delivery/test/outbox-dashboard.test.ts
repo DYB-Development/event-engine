@@ -29,4 +29,15 @@ describe("OutboxDashboard", () => {
       record.id,
     ]);
   });
+
+  it("retries all dead-lettered records", () => {
+    const store = new OutboxStore();
+    const first = store.record(event);
+    const second = store.record(event);
+    store.markDeadLettered(first.id, "boom");
+    store.markDeadLettered(second.id, "boom");
+    const dashboard = new OutboxDashboard(store);
+    dashboard.retryAll();
+    expect(dashboard.summary()).toMatchObject({ pending: 2, deadLettered: 0 });
+  });
 });
