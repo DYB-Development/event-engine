@@ -12,4 +12,11 @@ describe("OutboxDashboard", () => {
     const dashboard = new OutboxDashboard(store);
     expect(dashboard.summary()).toMatchObject({ total: 1, pending: 1 });
   });
+
+  it("returns events limited to the page size", () => {
+    const store = new OutboxStore();
+    for (let i = 0; i < 3; i++) store.record(event);
+    const dashboard = new OutboxDashboard(store);
+    expect(dashboard.events(1, 2)).toHaveLength(2);
+  });
 });
