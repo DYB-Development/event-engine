@@ -41,4 +41,8 @@ describe("evaluate", () => {
   it("rejects trailing tokens after a complete expression", () => {
     expect(() => evaluate("1 2")).toThrow(ExpressionError);
   });
+
+  it("rejects an unclosed parenthesis", () => {
+    expect(() => evaluate("(1 + 2")).toThrow(ExpressionError);
+  });
 });

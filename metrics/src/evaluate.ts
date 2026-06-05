@@ -88,7 +88,7 @@ class Parser {
     if (token === undefined) throw new Error("unexpected end of expression");
     if (token === "(") {
       const value = this.parseExpression();
-      this.next();
+      if (this.next() !== ")") throw new ExpressionError("expected ')'");
       return value;
     }
     if (token in this.variables) return this.variables[token]!;
