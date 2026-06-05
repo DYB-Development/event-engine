@@ -52,9 +52,10 @@ class Parser {
 
   private parseTerm(): number {
     let value = this.parseFactor();
-    while (this.peek() === "*") {
-      this.next();
-      value *= this.parseFactor();
+    while (this.peek() === "*" || this.peek() === "/") {
+      const operator = this.next();
+      const factor = this.parseFactor();
+      value = operator === "*" ? value * factor : value / factor;
     }
     return value;
   }

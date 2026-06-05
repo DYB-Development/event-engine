@@ -21,4 +21,8 @@ describe("evaluate", () => {
   it("subtracts terms", () => {
     expect(evaluate("10 - 3")).toBe(7);
   });
+
+  it("divides factors", () => {
+    expect(evaluate("12 / 4")).toBe(3);
+  });
 });
