@@ -35,6 +35,19 @@ describe("EventStore recording", () => {
       "invoice.paid",
     ]);
   });
+
+  it("records the event version", async () => {
+    const log = new InMemoryAppendOnlyStore<StoredEvent>();
+    const store = new EventStore(log);
+    await store.recorder()({
+      name: "invoice.paid",
+      level: Level.Outbox,
+      payload: 1,
+      occurredAt: "t",
+      version: 2,
+    });
+    expect((await store.all())[0]?.version).toBe(2);
+  });
 });
 
 describe("EventStore projections", () => {

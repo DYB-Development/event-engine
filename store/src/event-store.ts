@@ -5,6 +5,7 @@ export interface StoredEvent {
   name: string;
   occurredAt: string;
   payload: unknown;
+  version?: number;
 }
 
 export type Projection = (event: StoredEvent) => void | Promise<void>;
