@@ -10,6 +10,9 @@ export interface StoredEvent {
   version?: number;
   metadata?: Record<string, unknown>;
   idempotencyKey?: string;
+  aggregateType?: string;
+  aggregateId?: string;
+  aggregateVersion?: number;
 }
 
 export type Projection = (event: StoredEvent) => void | Promise<void>;

@@ -99,6 +99,26 @@ describe("EventStore recording", () => {
     });
     expect((await store.all())[0]?.idempotencyKey).toBe("idem-1");
   });
+
+  it("records the aggregate identity", async () => {
+    const log = new InMemoryAppendOnlyStore<StoredEvent>();
+    const store = new EventStore(log);
+    await store.recorder()({
+      name: "invoice.paid",
+      level: Level.Outbox,
+      payload: 1,
+      occurredAt: "t",
+      aggregateType: "Invoice",
+      aggregateId: "inv-9",
+      aggregateVersion: 3,
+    });
+    const stored = (await store.all())[0];
+    expect([
+      stored?.aggregateType,
+      stored?.aggregateId,
+      stored?.aggregateVersion,
+    ]).toEqual(["Invoice", "inv-9", 3]);
+  });
 });
 
 describe("EventStore projections", () => {
