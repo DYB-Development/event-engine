@@ -44,6 +44,9 @@ export function createSchemaCli(
           return 0;
         } catch (error) {
           if (error instanceof SchemaFileDriftError) {
+            effects.log(
+              `schema drift detected; run \`schema dump\` and commit ${path}`,
+            );
             return 1;
           }
           throw error;

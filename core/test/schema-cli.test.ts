@@ -56,4 +56,14 @@ describe("createSchemaCli", () => {
     ).run(["node", "schema", "check"]);
     expect(code).toBe(1);
   });
+
+  it("logs remediation guidance when check finds drift", () => {
+    const effects = fakeEffects();
+    createSchemaCli([{ name: "order.placed", shape: "x" }], effects).run([
+      "node",
+      "schema",
+      "check",
+    ]);
+    expect(effects.logs.some((line) => line.includes("dump"))).toBe(true);
+  });
 });
