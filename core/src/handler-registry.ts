@@ -7,6 +7,9 @@ export interface DispatchedEvent {
   occurredAt: string;
   version?: number;
   idempotencyKey?: string;
+  aggregateType?: string;
+  aggregateId?: string;
+  aggregateVersion?: number;
 }
 
 export type Handler = (event: DispatchedEvent) => void | Promise<void>;

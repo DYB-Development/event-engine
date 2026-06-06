@@ -43,6 +43,28 @@ describe("EventEngine", () => {
     expect(received).toBe("idem-1");
   });
 
+  it("dispatches the aggregate identity to handlers", async () => {
+    const engine = new EventEngine();
+    let received: Record<string, unknown> = {};
+    engine.registerHandler((event) => {
+      received = {
+        aggregateType: event.aggregateType,
+        aggregateId: event.aggregateId,
+        aggregateVersion: event.aggregateVersion,
+      };
+    }, "all");
+    await engine.emit(InvoicePaid, { amountCents: 100 }, "2026-01-01T00:00:00Z", {
+      aggregateType: "Invoice",
+      aggregateId: "inv-9",
+      aggregateVersion: 3,
+    });
+    expect(received).toEqual({
+      aggregateType: "Invoice",
+      aggregateId: "inv-9",
+      aggregateVersion: 3,
+    });
+  });
+
   it("fires an emitted notification carrying the built event", async () => {
     const engine = new EventEngine();
     const observed: string[] = [];
