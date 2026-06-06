@@ -1,4 +1,4 @@
-import { mergeSchema, dumpSchema } from "./schema";
+import { mergeSchema, dumpSchema, loadSchema } from "./schema";
 import type { DeclaredEvent } from "./schema";
 
 export interface SchemaCliDefinition {
@@ -28,7 +28,8 @@ export function createSchemaCli(
       const [, , command, pathArg] = argv;
       const path = pathArg ?? DEFAULT_PATH;
       if (command === "dump") {
-        effects.writeFile(path, dumpSchema(mergeSchema(declared, [])));
+        const committed = loadSchema(effects.readFile(path));
+        effects.writeFile(path, dumpSchema(mergeSchema(declared, committed)));
         return 0;
       }
       return 0;

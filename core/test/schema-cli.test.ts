@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createSchemaCli } from "../src/schema-cli";
-import { mergeSchema, dumpSchema } from "../src/schema";
+import { mergeSchema, dumpSchema, loadSchema } from "../src/schema";
 
 function fakeEffects(initial: Record<string, string> = {}) {
   const files: Record<string, string> = { ...initial };
@@ -29,5 +29,22 @@ describe("createSchemaCli", () => {
     expect(effects.files["./event-schema.json"]).toBe(
       dumpSchema(mergeSchema([{ name: "order.placed", shape: "x" }], [])),
     );
+  });
+
+  it("dumps by merging into the existing committed schema", () => {
+    const existing = dumpSchema([
+      { name: "order.placed", version: 1, shape: "old" },
+    ]);
+    const effects = fakeEffects({ "./event-schema.json": existing });
+    createSchemaCli([{ name: "order.placed", shape: "new" }], effects).run([
+      "node",
+      "schema",
+      "dump",
+    ]);
+    expect(
+      loadSchema(effects.files["./event-schema.json"]).map(
+        (entry) => entry.version,
+      ),
+    ).toEqual([1, 2]);
   });
 });
