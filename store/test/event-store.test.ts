@@ -73,6 +73,19 @@ describe("EventStore recording", () => {
     });
     expect((await store.all())[0]?.type).toBe("billing");
   });
+
+  it("records the event metadata", async () => {
+    const log = new InMemoryAppendOnlyStore<StoredEvent>();
+    const store = new EventStore(log);
+    await store.recorder()({
+      name: "invoice.paid",
+      level: Level.Outbox,
+      payload: 1,
+      occurredAt: "t",
+      metadata: { source: "web" },
+    });
+    expect((await store.all())[0]?.metadata).toEqual({ source: "web" });
+  });
 });
 
 describe("EventStore projections", () => {
