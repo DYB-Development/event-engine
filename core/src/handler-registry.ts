@@ -6,6 +6,7 @@ export interface DispatchedEvent {
   payload: unknown;
   occurredAt: string;
   version?: number;
+  idempotencyKey?: string;
 }
 
 export type Handler = (event: DispatchedEvent) => void | Promise<void>;

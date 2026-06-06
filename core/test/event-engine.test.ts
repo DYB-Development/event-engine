@@ -31,6 +31,18 @@ describe("EventEngine", () => {
     expect(received).toBe(1);
   });
 
+  it("dispatches the idempotency key to handlers", async () => {
+    const engine = new EventEngine();
+    let received: string | undefined;
+    engine.registerHandler((event) => {
+      received = event.idempotencyKey;
+    }, "all");
+    await engine.emit(InvoicePaid, { amountCents: 100 }, "2026-01-01T00:00:00Z", {
+      idempotencyKey: "idem-1",
+    });
+    expect(received).toBe("idem-1");
+  });
+
   it("fires an emitted notification carrying the built event", async () => {
     const engine = new EventEngine();
     const observed: string[] = [];
