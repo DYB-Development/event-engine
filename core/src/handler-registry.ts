@@ -5,6 +5,7 @@ export interface DispatchedEvent {
   level: Level;
   payload: unknown;
   occurredAt: string;
+  version?: number;
 }
 
 export type Handler = (event: DispatchedEvent) => void | Promise<void>;
