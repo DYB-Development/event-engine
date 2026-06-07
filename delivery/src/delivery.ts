@@ -35,17 +35,19 @@ export class Delivery {
 
   handler(): Handler {
     return async (event) => {
-      if (event.level === Level.InProcess) {
-        await this.dispatchSubscribers(event);
-      } else if (event.level === Level.Background) {
+      if (event.level === Level.EventSourcing) {
+        throw new UnsupportedLevelError(event.level);
+      }
+      const capabilities = event.capabilities;
+      if (capabilities?.durable) {
+        await this.deps.outbox.emit(event);
+      } else if (capabilities?.backgrounded) {
         await this.deps.jobs?.enqueue<DispatchedEvent>({
           name: "dispatch-subscribers",
           payload: event,
         });
-      } else if (event.level === Level.Outbox || event.level === Level.Broker) {
-        await this.deps.outbox.emit(event);
-      } else if (event.level === Level.EventSourcing) {
-        throw new UnsupportedLevelError(event.level);
+      } else {
+        await this.dispatchSubscribers(event);
       }
     };
   }
