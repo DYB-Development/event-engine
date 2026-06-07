@@ -58,9 +58,9 @@ describe("defineEvent", () => {
     expect(event.metadata).toEqual({});
   });
 
-  it("generates an idempotency key by default", () => {
+  it("omits the idempotency key when none is provided", () => {
     const event = InvoicePaid.build({ amountCents: 100 }, "2026-01-01T00:00:00Z");
-    expect(event.idempotencyKey.length).toBeGreaterThan(0);
+    expect(event.idempotencyKey).toBeUndefined();
   });
 
   it("carries provided idempotency key and aggregate fields from options", () => {

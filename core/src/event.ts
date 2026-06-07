@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import type { z, ZodType } from "zod";
 
@@ -55,7 +55,7 @@ export function defineEvent<Name extends string, Schema extends ZodType>(
         payload: Object.freeze(spec.schema.parse(input)) as Readonly<z.output<Schema>>,
         occurredAt,
         metadata: options.metadata ?? {},
-        idempotencyKey: options.idempotencyKey ?? randomUUID(),
+        idempotencyKey: options.idempotencyKey,
         aggregateType: options.aggregateType,
         aggregateId: options.aggregateId,
         aggregateVersion: options.aggregateVersion,
