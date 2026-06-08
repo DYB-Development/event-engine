@@ -9,7 +9,7 @@ describe("@event-engine/store public api", () => {
     const InvoicePaid = defineEvent({
       name: "invoice.paid",
       version: 1,
-      delivery: "durable",
+      processType: "durable",
       schema: z.object({ amountCents: z.number() }),
     });
     const log = new InMemoryAppendOnlyStore<StoredEvent>();
@@ -34,7 +34,7 @@ describe("@event-engine/store public api", () => {
     const InvoicePaid = defineEvent({
       name: "invoice.paid",
       version: 1,
-      delivery: "durable",
+      processType: "durable",
       schema: z.object({ amountCents: z.number() }),
     });
     await engine.emit(InvoicePaid, { amountCents: 100 }, "2026-01-01T00:00:00Z");
@@ -53,7 +53,7 @@ describe("@event-engine/store public api", () => {
     const InvoicePaid = defineEvent({
       name: "invoice.paid",
       version: 2,
-      delivery: "durable",
+      processType: "durable",
       schema: z.object({ amountCents: z.number() }),
     });
     await engine.emit(InvoicePaid, { amountCents: 100 }, "2026-01-01T00:00:00Z", {
