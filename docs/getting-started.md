@@ -11,7 +11,7 @@ import { defineEvent } from "@event-engine/core";
 export const InvoicePaid = defineEvent({
   name: "invoice.paid",
   version: 1,
-  delivery: "durable", // inline | background | durable | broker
+  processType: "durable", // inline | background | durable | broker | telemetry | sourced
   schema: z.object({ amountCents: z.number().int().nonnegative() }),
 });
 ```

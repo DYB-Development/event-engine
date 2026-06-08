@@ -9,7 +9,7 @@ const InvoicePaid = defineEvent({
   name: "invoice.paid",
   type: "billing",      // optional; defaults to name
   version: 1,
-  delivery: "durable",  // inline | background | durable | broker
+  processType: "durable",  // inline | background | durable | broker | telemetry | sourced
   schema: z.object({ amountCents: z.number() }),
 });
 ```
