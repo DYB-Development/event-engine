@@ -17,7 +17,7 @@
     "locals": "the-local install"
   },
   "dependencies": {
-    "the-local": "file:../the-local"
+    "the-local": "github:tylercschneider/the-local#feat/prepare-hook"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
