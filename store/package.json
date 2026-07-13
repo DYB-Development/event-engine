@@ -1,6 +1,7 @@
 {
   "name": "@eventengine/store",
   "version": "0.1.0",
+  "license": "MIT",
   "type": "module",
   "description": "event-engine store: the permanent event record, projections, and replay built on @eventengine/core.",
   "repository": {
