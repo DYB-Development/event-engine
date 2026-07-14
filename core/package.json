@@ -1,6 +1,7 @@
 {
   "name": "@eventengine/core",
   "version": "0.1.0",
+  "license": "MIT",
   "type": "module",
   "description": "event-engine foundation: define events, build the Event envelope, and drive the emit → dispatch → handlers spine.",
   "repository": {

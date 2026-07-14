@@ -1,6 +1,7 @@
 {
   "name": "@eventengine/ports",
   "version": "0.1.0",
+  "license": "MIT",
   "type": "module",
   "description": "Storage, transaction, and job-queue ports for event-engine (in-memory adapters included).",
   "repository": {
