@@ -17,6 +17,16 @@ export const RESERVED_PAYLOAD_FIELDS = [
   "aggregate_version",
 ] as const;
 
+export const RESERVED_INPUT_NAMES = [
+  "event_version",
+  "occurred_at",
+  "metadata",
+  "idempotency_key",
+  "aggregate_type",
+  "aggregate_id",
+  "aggregate_version",
+] as const;
+
 export interface ValidatableDefinition {
   eventName: string;
   inputs: string[];
@@ -28,11 +38,19 @@ export function validateDefinition(
 ): string[] {
   return [
     ...eventNameErrors(definition.eventName),
+    ...definition.inputs.flatMap(reservedInputErrors),
     ...definition.payloadFields.flatMap((field) => [
       ...reservedNameErrors(field),
       ...unknownInputErrors(field, definition.inputs),
     ]),
   ];
+}
+
+function reservedInputErrors(name: string): string[] {
+  if (!RESERVED_INPUT_NAMES.includes(name as never)) {
+    return [];
+  }
+  return [`input name collides with a reserved envelope key: ${name}`];
 }
 
 const SNAKE_CASE = /^[a-z][a-z0-9_]*$/;

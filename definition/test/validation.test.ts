@@ -39,4 +39,16 @@ describe("validateDefinition", () => {
 
     expect(errors).toEqual(["event name must be snake_case: LeadCreated"]);
   });
+
+  it("rejects an input name that collides with a reserved envelope key", () => {
+    const errors = validateDefinition({
+      eventName: "lead_created",
+      inputs: ["metadata"],
+      payloadFields: [],
+    });
+
+    expect(errors).toEqual([
+      "input name collides with a reserved envelope key: metadata",
+    ]);
+  });
 });
