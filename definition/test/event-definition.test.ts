@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { defineEvent, input, optionalInput } from "../src/event-definition";
+import { fingerprint } from "../src/fingerprint";
 
 interface Lead {
   id: number;
@@ -92,5 +93,18 @@ describe("defineEvent", () => {
     expect(definition.schema.payloadFields).toEqual([
       { name: "company", from: "lead", attr: "company", required: false },
     ]);
+  });
+
+  it("fingerprints the compiled schema", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: { lead: input<Lead>() },
+      payload: { lead_id: { from: "lead", attr: "id" } },
+    });
+
+    expect(definition.schema.fingerprint).toBe(
+      fingerprint(definition.schema),
+    );
   });
 });

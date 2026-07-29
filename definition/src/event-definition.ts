@@ -1,3 +1,5 @@
+import { fingerprint } from "./fingerprint";
+
 export interface InputMarker<Value, Required extends boolean> {
   required: Required;
   readonly value?: Value;
@@ -39,16 +41,16 @@ export interface EventDefinitionSpec<Inputs extends InputMap> {
 export function defineEvent<Inputs extends InputMap>(
   spec: EventDefinitionSpec<Inputs>,
 ) {
-  return {
-    schema: {
-      eventName: spec.eventName,
-      eventType: spec.eventType,
-      domain: spec.domain,
-      requiredInputs: namesOfInputs(spec.inputs, true),
-      optionalInputs: namesOfInputs(spec.inputs, false),
-      payloadFields: compilePayloadFields(spec.payload),
-    },
+  const schema = {
+    eventName: spec.eventName,
+    eventType: spec.eventType,
+    domain: spec.domain,
+    requiredInputs: namesOfInputs(spec.inputs, true),
+    optionalInputs: namesOfInputs(spec.inputs, false),
+    payloadFields: compilePayloadFields(spec.payload),
   };
+
+  return { schema: { ...schema, fingerprint: fingerprint(schema) } };
 }
 
 function compilePayloadFields(
