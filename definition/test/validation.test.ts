@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { validateDefinition } from "../src/validation";
+import {
+  validateDefinition,
+  assertValidDefinition,
+  InvalidEventDefinitionError,
+} from "../src/validation";
 
 describe("validateDefinition", () => {
   it("rejects a payload field named after an envelope key", () => {
@@ -50,5 +54,25 @@ describe("validateDefinition", () => {
     expect(errors).toEqual([
       "input name collides with a reserved envelope key: metadata",
     ]);
+  });
+});
+
+describe("assertValidDefinition", () => {
+  it("reports every violation in one error", () => {
+    expect(() =>
+      assertValidDefinition({
+        eventName: "LeadCreated",
+        inputs: ["lead"],
+        payloadFields: [
+          { name: "metadata", from: "campaign", attr: "id", required: true },
+        ],
+      }),
+    ).toThrow(
+      new InvalidEventDefinitionError([
+        "event name must be snake_case: LeadCreated",
+        "payload field uses reserved name: metadata",
+        "payload field metadata references unknown input: campaign",
+      ]),
+    );
   });
 });

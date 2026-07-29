@@ -33,6 +33,23 @@ export interface ValidatableDefinition {
   payloadFields: PayloadField[];
 }
 
+export class InvalidEventDefinitionError extends Error {
+  readonly errors: string[];
+
+  constructor(errors: string[]) {
+    super(errors.join(", "));
+    this.name = "InvalidEventDefinitionError";
+    this.errors = errors;
+  }
+}
+
+export function assertValidDefinition(definition: ValidatableDefinition): void {
+  const errors = validateDefinition(definition);
+  if (errors.length > 0) {
+    throw new InvalidEventDefinitionError(errors);
+  }
+}
+
 export function validateDefinition(
   definition: ValidatableDefinition,
 ): string[] {
