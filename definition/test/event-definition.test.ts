@@ -23,4 +23,16 @@ describe("defineEvent", () => {
 
     expect(definition.schema.eventType).toBe("domain");
   });
+
+  it("compiles the domain into the schema", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      domain: "marketing",
+      inputs: {},
+      payload: {},
+    });
+
+    expect(definition.schema.domain).toBe("marketing");
+  });
 });
