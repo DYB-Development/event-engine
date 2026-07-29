@@ -80,4 +80,17 @@ describe("defineEvent", () => {
       { name: "lead_id", from: "lead", attr: "id", required: true },
     ]);
   });
+
+  it("marks a payload field declared with required false as optional", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: { lead: input<Lead>() },
+      payload: { company: { from: "lead", attr: "company", required: false } },
+    });
+
+    expect(definition.schema.payloadFields).toEqual([
+      { name: "company", from: "lead", attr: "company", required: false },
+    ]);
+  });
 });
