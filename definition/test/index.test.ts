@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { defineEvent, input } from "../src/index";
+import { defineEvent, input, InvalidEventDefinitionError } from "../src/index";
 
 interface Lead {
   id: number;
@@ -18,5 +18,16 @@ describe("@eventengine/definition public api", () => {
     expect(definition.schema.payloadFields).toEqual([
       { name: "lead_id", from: "lead", attr: "id", required: true },
     ]);
+  });
+
+  it("enforces the definition rules through the package entry", () => {
+    expect(() =>
+      defineEvent({
+        eventName: "LeadCreated",
+        eventType: "domain",
+        inputs: { lead: input<Lead>() },
+        payload: {},
+      }),
+    ).toThrow(InvalidEventDefinitionError);
   });
 });
