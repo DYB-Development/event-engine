@@ -67,4 +67,17 @@ describe("defineEvent", () => {
 
     expect(definition.schema.optionalInputs).toEqual(["campaign"]);
   });
+
+  it("compiles a payload field's source mapping into the schema", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: { lead: input<Lead>() },
+      payload: { lead_id: { from: "lead", attr: "id" } },
+    });
+
+    expect(definition.schema.payloadFields).toEqual([
+      { name: "lead_id", from: "lead", attr: "id", required: true },
+    ]);
+  });
 });

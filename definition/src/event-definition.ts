@@ -13,12 +13,27 @@ export function optionalInput<Value>(): InputMarker<Value, false> {
 
 export type InputMap = Record<string, InputMarker<unknown, boolean>>;
 
+export type PayloadFieldSpec<Inputs extends InputMap> = {
+  [Name in keyof Inputs & string]: {
+    from: Name;
+    attr: keyof NonNullable<Inputs[Name]["value"]> & string;
+    required?: boolean;
+  };
+}[keyof Inputs & string];
+
+export interface PayloadField {
+  name: string;
+  from: string;
+  attr: string;
+  required: boolean;
+}
+
 export interface EventDefinitionSpec<Inputs extends InputMap> {
   eventName: string;
   eventType: string;
   domain?: string;
   inputs: Inputs;
-  payload: Record<string, never>;
+  payload: Record<string, PayloadFieldSpec<Inputs>>;
 }
 
 export function defineEvent<Inputs extends InputMap>(
@@ -31,8 +46,20 @@ export function defineEvent<Inputs extends InputMap>(
       domain: spec.domain,
       requiredInputs: namesOfInputs(spec.inputs, true),
       optionalInputs: namesOfInputs(spec.inputs, false),
+      payloadFields: compilePayloadFields(spec.payload),
     },
   };
+}
+
+function compilePayloadFields(
+  payload: Record<string, { from: string; attr: string; required?: boolean }>,
+): PayloadField[] {
+  return Object.entries(payload).map(([name, field]) => ({
+    name,
+    from: field.from,
+    attr: field.attr,
+    required: field.required ?? true,
+  }));
 }
 
 function namesOfInputs(inputs: InputMap, required: boolean): string[] {
