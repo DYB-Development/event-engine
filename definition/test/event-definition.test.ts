@@ -1,10 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { defineEvent, input } from "../src/event-definition";
+import { defineEvent, input, optionalInput } from "../src/event-definition";
 
 interface Lead {
   id: number;
   email: string;
   company: string | null;
+}
+
+interface Campaign {
+  slug: string;
 }
 
 describe("defineEvent", () => {
@@ -51,5 +55,16 @@ describe("defineEvent", () => {
     });
 
     expect(definition.schema.requiredInputs).toEqual(["lead"]);
+  });
+
+  it("lists an optional input separately from the required ones", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: { lead: input<Lead>(), campaign: optionalInput<Campaign>() },
+      payload: {},
+    });
+
+    expect(definition.schema.optionalInputs).toEqual(["campaign"]);
   });
 });

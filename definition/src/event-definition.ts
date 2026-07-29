@@ -7,6 +7,10 @@ export function input<Value>(): InputMarker<Value, true> {
   return { required: true };
 }
 
+export function optionalInput<Value>(): InputMarker<Value, false> {
+  return { required: false };
+}
+
 export type InputMap = Record<string, InputMarker<unknown, boolean>>;
 
 export interface EventDefinitionSpec<Inputs extends InputMap> {
@@ -26,6 +30,7 @@ export function defineEvent<Inputs extends InputMap>(
       eventType: spec.eventType,
       domain: spec.domain,
       requiredInputs: namesOfInputs(spec.inputs, true),
+      optionalInputs: namesOfInputs(spec.inputs, false),
     },
   };
 }
