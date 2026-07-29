@@ -26,10 +26,22 @@ export interface ValidatableDefinition {
 export function validateDefinition(
   definition: ValidatableDefinition,
 ): string[] {
-  return definition.payloadFields.flatMap((field) => [
-    ...reservedNameErrors(field),
-    ...unknownInputErrors(field, definition.inputs),
-  ]);
+  return [
+    ...eventNameErrors(definition.eventName),
+    ...definition.payloadFields.flatMap((field) => [
+      ...reservedNameErrors(field),
+      ...unknownInputErrors(field, definition.inputs),
+    ]),
+  ];
+}
+
+const SNAKE_CASE = /^[a-z][a-z0-9_]*$/;
+
+function eventNameErrors(eventName: string): string[] {
+  if (SNAKE_CASE.test(eventName)) {
+    return [];
+  }
+  return [`event name must be snake_case: ${eventName}`];
 }
 
 function unknownInputErrors(field: PayloadField, inputs: string[]): string[] {

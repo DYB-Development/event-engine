@@ -29,4 +29,14 @@ describe("validateDefinition", () => {
       "payload field slug references unknown input: campaign",
     ]);
   });
+
+  it("rejects an event name that is not snake_case", () => {
+    const errors = validateDefinition({
+      eventName: "LeadCreated",
+      inputs: [],
+      payloadFields: [],
+    });
+
+    expect(errors).toEqual(["event name must be snake_case: LeadCreated"]);
+  });
 });
