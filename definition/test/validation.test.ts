@@ -15,4 +15,18 @@ describe("validateDefinition", () => {
       "payload field uses reserved name: occurred_at",
     ]);
   });
+
+  it("rejects a payload field whose from names an undeclared input", () => {
+    const errors = validateDefinition({
+      eventName: "lead_created",
+      inputs: ["lead"],
+      payloadFields: [
+        { name: "slug", from: "campaign", attr: "slug", required: true },
+      ],
+    });
+
+    expect(errors).toEqual([
+      "payload field slug references unknown input: campaign",
+    ]);
+  });
 });

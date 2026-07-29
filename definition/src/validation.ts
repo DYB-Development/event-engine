@@ -26,7 +26,17 @@ export interface ValidatableDefinition {
 export function validateDefinition(
   definition: ValidatableDefinition,
 ): string[] {
-  return definition.payloadFields.flatMap(reservedNameErrors);
+  return definition.payloadFields.flatMap((field) => [
+    ...reservedNameErrors(field),
+    ...unknownInputErrors(field, definition.inputs),
+  ]);
+}
+
+function unknownInputErrors(field: PayloadField, inputs: string[]): string[] {
+  if (inputs.includes(field.from)) {
+    return [];
+  }
+  return [`payload field ${field.name} references unknown input: ${field.from}`];
 }
 
 function reservedNameErrors(field: PayloadField): string[] {
