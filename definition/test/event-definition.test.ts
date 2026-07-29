@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { defineEvent } from "../src/event-definition";
+import { defineEvent, input } from "../src/event-definition";
+
+interface Lead {
+  id: number;
+  email: string;
+  company: string | null;
+}
 
 describe("defineEvent", () => {
   it("compiles the event name into the schema", () => {
@@ -34,5 +40,16 @@ describe("defineEvent", () => {
     });
 
     expect(definition.schema.domain).toBe("marketing");
+  });
+
+  it("lists a declared input as required", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: { lead: input<Lead>() },
+      payload: {},
+    });
+
+    expect(definition.schema.requiredInputs).toEqual(["lead"]);
   });
 });
