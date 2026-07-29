@@ -12,4 +12,15 @@ describe("defineEvent", () => {
 
     expect(definition.schema.eventName).toBe("lead_created");
   });
+
+  it("compiles the event type into the schema", () => {
+    const definition = defineEvent({
+      eventName: "lead_created",
+      eventType: "domain",
+      inputs: {},
+      payload: {},
+    });
+
+    expect(definition.schema.eventType).toBe("domain");
+  });
 });

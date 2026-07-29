@@ -9,6 +9,7 @@ export function defineEvent(spec: EventDefinitionSpec) {
   return {
     schema: {
       eventName: spec.eventName,
+      eventType: spec.eventType,
     },
   };
 }
