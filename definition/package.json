@@ -1,0 +1,34 @@
+{
+  "name": "@eventengine/definition",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "description": "The dependency-free event-definition contract for event-engine: the DSL, the compiled schema, and the publisher port.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DYB-Development/event-engine.git",
+    "directory": "definition"
+  },
+  "homepage": "https://github.com/DYB-Development/event-engine/tree/main/definition#readme",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "prepublishOnly": "pnpm build"
+  }
+}

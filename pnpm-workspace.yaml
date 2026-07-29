@@ -1,5 +1,6 @@
 packages:
   - "ports"
+  - "definition"
   - "core"
   - "stats"
   - "store"
