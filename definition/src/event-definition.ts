@@ -1,4 +1,5 @@
 import { fingerprint } from "./fingerprint";
+import { assertValidDefinition } from "./validation";
 
 export interface InputMarker<Value, Required extends boolean> {
   required: Required;
@@ -49,6 +50,12 @@ export function defineEvent<Inputs extends InputMap>(
     optionalInputs: namesOfInputs(spec.inputs, false),
     payloadFields: compilePayloadFields(spec.payload),
   };
+
+  assertValidDefinition({
+    eventName: schema.eventName,
+    inputs: [...schema.requiredInputs, ...schema.optionalInputs],
+    payloadFields: schema.payloadFields,
+  });
 
   return { schema: { ...schema, fingerprint: fingerprint(schema) } };
 }

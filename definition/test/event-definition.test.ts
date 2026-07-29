@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { defineEvent, input, optionalInput } from "../src/event-definition";
 import { fingerprint } from "../src/fingerprint";
+import { InvalidEventDefinitionError } from "../src/validation";
 
 interface Lead {
   id: number;
@@ -106,5 +107,16 @@ describe("defineEvent", () => {
     expect(definition.schema.fingerprint).toBe(
       fingerprint(definition.schema),
     );
+  });
+
+  it("refuses to compile a definition that violates the rules", () => {
+    expect(() =>
+      defineEvent({
+        eventName: "lead_created",
+        eventType: "domain",
+        inputs: { lead: input<Lead>() },
+        payload: { metadata: { from: "lead", attr: "id" } },
+      }),
+    ).toThrow(InvalidEventDefinitionError);
   });
 });
