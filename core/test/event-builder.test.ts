@@ -65,4 +65,17 @@ describe("buildEvent", () => {
       }),
     ).toThrow("unknown input: intruder");
   });
+
+  it("carries the event identity alongside the payload", () => {
+    const built = buildEvent({
+      schema: leadCreated,
+      inputs: { lead: { id: 42 } },
+    });
+
+    expect(built).toMatchObject({
+      eventName: "lead_created",
+      eventType: "domain",
+      eventVersion: 1,
+    });
+  });
 });

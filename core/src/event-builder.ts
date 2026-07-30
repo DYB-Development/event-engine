@@ -6,6 +6,9 @@ export interface CatalogPayloadField {
 }
 
 export interface CatalogEntry {
+  eventName: string;
+  eventType: string;
+  eventVersion: number;
   requiredInputs: string[];
   optionalInputs: string[];
   payloadFields: CatalogPayloadField[];
@@ -16,9 +19,14 @@ export interface BuildRequest {
   inputs: Record<string, unknown>;
 }
 
-export function buildEvent(request: BuildRequest): {
+export interface BuiltEvent {
+  eventName: string;
+  eventType: string;
+  eventVersion: number;
   payload: Record<string, unknown>;
-} {
+}
+
+export function buildEvent(request: BuildRequest): BuiltEvent {
   assertInputsSatisfy(request.schema, request.inputs);
 
   const payload: Record<string, unknown> = {};
@@ -34,7 +42,12 @@ export function buildEvent(request: BuildRequest): {
       : input;
   }
 
-  return { payload };
+  return {
+    eventName: request.schema.eventName,
+    eventType: request.schema.eventType,
+    eventVersion: request.schema.eventVersion,
+    payload,
+  };
 }
 
 function assertInputsSatisfy(
