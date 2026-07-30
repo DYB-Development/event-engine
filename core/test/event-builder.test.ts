@@ -26,6 +26,7 @@ describe("buildEvent", () => {
     const built = buildEvent({
       schema: {
         ...leadCreated,
+        requiredInputs: ["score"],
         payloadFields: [{ name: "score", from: "score", required: true }],
       },
       inputs: { score: 99 },
@@ -38,6 +39,7 @@ describe("buildEvent", () => {
     const built = buildEvent({
       schema: {
         ...leadCreated,
+        requiredInputs: [],
         optionalInputs: ["campaign"],
         payloadFields: [
           { name: "slug", from: "campaign", attr: "slug", required: false },
@@ -47,5 +49,11 @@ describe("buildEvent", () => {
     });
 
     expect(Object.keys(built.payload)).toEqual([]);
+  });
+
+  it("rejects inputs that omit a required one", () => {
+    expect(() => buildEvent({ schema: leadCreated, inputs: {} })).toThrow(
+      "missing required input: lead",
+    );
   });
 });
