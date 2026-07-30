@@ -21,4 +21,16 @@ describe("buildEvent", () => {
 
     expect(built.payload).toEqual({ lead_id: 42 });
   });
+
+  it("carries the whole input when the field declares no attr", () => {
+    const built = buildEvent({
+      schema: {
+        ...leadCreated,
+        payloadFields: [{ name: "score", from: "score", required: true }],
+      },
+      inputs: { score: 99 },
+    });
+
+    expect(built.payload).toEqual({ score: 99 });
+  });
 });

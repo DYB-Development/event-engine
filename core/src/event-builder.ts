@@ -1,7 +1,7 @@
 export interface CatalogPayloadField {
   name: string;
   from: string;
-  attr: string;
+  attr?: string;
 }
 
 export interface CatalogEntry {
@@ -19,8 +19,10 @@ export function buildEvent(request: BuildRequest): {
   const payload: Record<string, unknown> = {};
 
   for (const field of request.schema.payloadFields) {
-    const input = request.inputs[field.from] as Record<string, unknown>;
-    payload[field.name] = input[field.attr];
+    const input = request.inputs[field.from];
+    payload[field.name] = field.attr
+      ? (input as Record<string, unknown>)[field.attr]
+      : input;
   }
 
   return { payload };
