@@ -18,10 +18,29 @@ import {
   SchemaFileDriftError,
   createSchemaCli,
   createNodeEffects,
+  buildEvent,
   type ReportEntry,
 } from "../src/index";
 
 describe("@eventengine/core public api", () => {
+  it("builds an event from its catalog entry through the package entry", () => {
+    const built = buildEvent({
+      schema: {
+        eventName: "lead_created",
+        eventType: "domain",
+        eventVersion: 1,
+        requiredInputs: ["lead"],
+        optionalInputs: [],
+        payloadFields: [
+          { name: "lead_id", from: "lead", attr: "id", required: true },
+        ],
+      },
+      inputs: { lead: { id: 42 } },
+    });
+
+    expect(built.payload).toEqual({ lead_id: 42 });
+  });
+
   it("defines and builds a validated event through the package entry", () => {
     const Signup = defineEvent({
       name: "user.signup",

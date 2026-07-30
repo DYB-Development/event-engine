@@ -1,3 +1,10 @@
+export { buildEvent } from "./event-builder";
+export type {
+  BuildRequest,
+  BuiltEvent,
+  CatalogEntry,
+  CatalogPayloadField,
+} from "./event-builder";
 export { defineEvent, Level } from "./event";
 export type { BuildOptions } from "./event";
 export type { ProcessType } from "./process-type";
