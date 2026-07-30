@@ -2,6 +2,7 @@ export interface CatalogPayloadField {
   name: string;
   from: string;
   attr?: string;
+  required: boolean;
 }
 
 export interface CatalogEntry {
@@ -20,6 +21,10 @@ export function buildEvent(request: BuildRequest): {
 
   for (const field of request.schema.payloadFields) {
     const input = request.inputs[field.from];
+    if (input == null && !field.required) {
+      continue;
+    }
+
     payload[field.name] = field.attr
       ? (input as Record<string, unknown>)[field.attr]
       : input;

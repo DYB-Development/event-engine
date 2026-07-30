@@ -33,4 +33,19 @@ describe("buildEvent", () => {
 
     expect(built.payload).toEqual({ score: 99 });
   });
+
+  it("omits an optional field whose input was not supplied", () => {
+    const built = buildEvent({
+      schema: {
+        ...leadCreated,
+        optionalInputs: ["campaign"],
+        payloadFields: [
+          { name: "slug", from: "campaign", attr: "slug", required: false },
+        ],
+      },
+      inputs: {},
+    });
+
+    expect(Object.keys(built.payload)).toEqual([]);
+  });
 });
