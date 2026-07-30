@@ -56,4 +56,13 @@ describe("buildEvent", () => {
       "missing required input: lead",
     );
   });
+
+  it("rejects an input the schema never declared", () => {
+    expect(() =>
+      buildEvent({
+        schema: leadCreated,
+        inputs: { lead: { id: 42 }, intruder: {} },
+      }),
+    ).toThrow("unknown input: intruder");
+  });
 });

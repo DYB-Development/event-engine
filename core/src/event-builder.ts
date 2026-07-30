@@ -7,6 +7,7 @@ export interface CatalogPayloadField {
 
 export interface CatalogEntry {
   requiredInputs: string[];
+  optionalInputs: string[];
   payloadFields: CatalogPayloadField[];
 }
 
@@ -47,5 +48,12 @@ function assertInputsSatisfy(
 
   if (missing.length > 0) {
     throw new Error(`missing required input: ${missing.join(", ")}`);
+  }
+
+  const declared = [...schema.requiredInputs, ...schema.optionalInputs];
+  const unknown = supplied.filter((name) => !declared.includes(name));
+
+  if (unknown.length > 0) {
+    throw new Error(`unknown input: ${unknown.join(", ")}`);
   }
 }
